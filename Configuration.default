@@ -1,0 +1,15 @@
+#!/bin/csh -f
+
+#
+# Configuration.default
+#
+# Source this file from any csh script to set the
+# env variables
+#
+
+if ( ${?MGICONFIG} == 0 ) then
+	setenv MGICONFIG /usr/local/mgi/live/mgiconfig
+endif
+
+source ${MGICONFIG}/master.config.csh
+
