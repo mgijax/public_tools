@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/opt/python/bin/python
 
 # Name: publicCheck.cgi
 # Purpose: check the health of the various pieces of the public MGI presence,
@@ -11,6 +11,7 @@ import re
 import cgi
 import pg_db
 import runCommand
+import json
 
 ###--- constants ---###
 
@@ -24,6 +25,7 @@ GXD_SOLR_URL1 = 'gxdSolrUrl1'
 GXD_SOLR_URL2 = 'gxdSolrUrl2'
 GXD_SOLR_URL3 = 'gxdSolrUrl3'
 SNP_SOLR_URL = 'snpSolrUrl'
+SNP_ES_URL = 'snpEsUrl'
 NIB_URL = 'nibUrl'
 
 # colors chosen to work for people with color blindness, per:
@@ -51,6 +53,7 @@ GXD_SOLR_INDEXES = [ 'gxdResult', 'gxdImagePane' ]
 
 # sample of indexes to check counts (SNPs)
 SNP_SOLR_INDEXES = [ 'SearchSNPIndex', 'ConsensusSNPIndex', 'AlleleSNPIndex' ]
+SNP_ES_INDEXES = [ 'search_snp_index', 'consensus_snp_index', 'allele_snp_index' ]
 
 # canned URL for sequence retrieval from NIB files
 NIB_URL = 'http://www.informatics.jax.org/seqfetch/tofasta.cgi?seq1=mousegenome%21OTTMUSG00000016671%215%2175574916%2175656722%21%2B%21&flank1=0'
@@ -68,6 +71,7 @@ pub1 = {
 	GXD_SOLR_URL2 : 'http://bhmgipgxd03lp.jax.org:9995/solr',
 	GXD_SOLR_URL3 : 'http://bhmgipgxd05lp.jax.org:9995/solr',
 	SNP_SOLR_URL : 'http://bhmgipsnp01lp.jax.org:18983/solr',
+	SNP_ES_URL : 'http://bhmgisnp01lp.jax.org:9200',
 }
 
 pub2 = {
@@ -81,6 +85,7 @@ pub2 = {
 	GXD_SOLR_URL2 : 'http://bhmgipgxd04lp.jax.org:9995/solr',
 	GXD_SOLR_URL3 : 'http://bhmgipgxd06lp.jax.org:9995/solr',
 	SNP_SOLR_URL : 'http://bhmgipsnp01lp.jax.org:28983/solr',
+	SNP_ES_URL : 'http://bhmgisnp02lp.jax.org:9200',
 }
 
 ###--- functions ---###
@@ -188,7 +193,7 @@ def solrCell(title, url, indexes, indexType):
 		for index in indexes:
 			myURL = '%s/%s/select?q=*%%3A*&wt=json&rows=0' % (url, index)
 			x = readURL(myURL)
-			results = eval(x)
+                        results = json.loads(x)
 			out.append('%s : %s documents' % (index,
 				results['response']['numFound']))
 
@@ -202,6 +207,29 @@ def solrCell(title, url, indexes, indexType):
 			link = 'http://bhmgiwk01lp.jax.org/mediawiki/index.php/sw:Production_And_Public_Support#Starting/Stopping_GXD_Solr'
 			linkText = 'Help'
 		else:
+			link = 'http://bhmgiwk01lp.jax.org/mediawiki/index.php/sw:Production_And_Public_Support#Starting/Stopping_SNP_Solr'
+			linkText = 'Help'
+
+	return wrapCell(out, color, link, linkText)
+
+def esCell(title, url, indexes, indexType):
+	out = [ cellTitle(title) ]
+	color = GREEN
+	link = None
+	linkText = None
+
+	try:
+		for index in indexes:
+			myURL = '%s/%s/_search?q=*%%3A*&size=0&track_total_hits=true' % (url, index)
+			x = readURL(myURL)
+			results = json.loads(x)
+			out.append('%s : %s documents' % (index,
+				results['hits']['total']["value"]))
+
+	except Exception, e:
+		out.append('Failed: %s (%s)' % (str(e), myURL))
+		color = YELLOW
+		if indexType == 'snp':
 			link = 'http://bhmgiwk01lp.jax.org/mediawiki/index.php/sw:Production_And_Public_Support#Starting/Stopping_SNP_Solr'
 			linkText = 'Help'
 
@@ -279,6 +307,12 @@ out = [
 	'<td>&nbsp;</td>',
 	'</tr>',
 
+	'<tr>',
+	'<td id="cell18">SNP ES - Working...<script>populate("snpEs", "pub1", "cell18")</script></td>',
+	'<td id="cell19">SNP ES - Working...<script>populate("snpEs", "pub2", "cell19")</script></td>',
+	'<td>&nbsp;</td>',
+	'</tr>',
+
 	'</table>',
 	]
 
@@ -313,6 +347,8 @@ if form.has_key('test') and form.has_key('server'):
 		print solrCell('GXD Solr : %s' % serverPort(config[GXD_SOLR_URL3]), config[GXD_SOLR_URL3], GXD_SOLR_INDEXES, 'gxd')
 	elif form['test'].value == 'snpSolr':
 		print solrCell('SNP Solr : %s' % serverPort(config[SNP_SOLR_URL]), config[SNP_SOLR_URL], SNP_SOLR_INDEXES, 'snp')
+	elif form['test'].value == 'snpEs':
+		print esCell('SNP ES : %s' % serverPort(config[SNP_ES_URL]), config[SNP_ES_URL], SNP_ES_INDEXES, 'snp')
 	elif form['test'].value == 'nibFiles':
 		print nibFilesCell('Sequence Retrieval : NIB Files')
 	else:
