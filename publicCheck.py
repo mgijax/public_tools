@@ -249,61 +249,58 @@ def nibFilesCell(title):
 
 out = [
         '<table style="border-spacing:5px">',
-        '<tr><th>Pub 1</th><th>Pub 2</th><th>Shared</th></tr>',
+        '<tr><th>Pub 1</th><th>Pub 2</th></tr>',
 
         '<tr>',
         '<td id="cell1">fe database - Working...<script>populate("feDb", "pub1", "cell1")</script></td>',
         '<td id="cell2">fe database - Working...<script>populate("feDb", "pub2", "cell2")</script></td>',
-        '<td id="cell3">NIB Files - Working...<script>populate("nibFiles", "pub1", "cell3")</script></td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell4">fewi - Working...<script>populate("fewi", "pub1", "cell4")</script></td>',
         '<td id="cell5">fewi - Working...<script>populate("fewi", "pub2", "cell5")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell6">fewi - Working...<script>populate("fewiBatch", "pub1", "cell6")</script></td>',
         '<td id="cell7">fewi - Working...<script>populate("fewiBatch", "pub2", "cell7")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell8">fe Solr - Working...<script>populate("feSolr", "pub1", "cell8")</script></td>',
         '<td id="cell9">fe Solr - Working...<script>populate("feSolr", "pub2", "cell9")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell10">gxd Solr - Working...<script>populate("gxdSolr1", "pub1", "cell10")</script></td>',
         '<td id="cell11">gxd Solr - Working...<script>populate("gxdSolr1", "pub2", "cell11")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell12">gxd Solr - Working...<script>populate("gxdSolr2", "pub1", "cell12")</script></td>',
         '<td id="cell13">gxd Solr - Working...<script>populate("gxdSolr2", "pub2", "cell13")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell14">gxd Solr - Working...<script>populate("gxdSolr3", "pub1", "cell14")</script></td>',
         '<td id="cell15">gxd Solr - Working...<script>populate("gxdSolr3", "pub2", "cell15")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell16">SNP Solr - Working...<script>populate("snpSolr", "pub1", "cell16")</script></td>',
         '<td id="cell17">SNP Solr - Working...<script>populate("snpSolr", "pub2", "cell17")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
 
         '<tr>',
         '<td id="cell18">SNP ES - Working...<script>populate("snpEs", "pub1", "cell18")</script></td>',
         '<td id="cell19">SNP ES - Working...<script>populate("snpEs", "pub2", "cell19")</script></td>',
-        '<td>&nbsp;</td>',
         '</tr>',
+
+        '<tr>',
+        '<td colspan=2 id="cell3">NIB Files - Working...<script>populate("nibFiles", "pub1", "cell3")</script></td>'
+        '</tr>',
+
+
 
         '</table>',
         ]
@@ -342,7 +339,7 @@ if "test" in form and "server" in form:
         elif form['test'].value == 'snpEs':
                 print ( esCell('SNP ES : %s' % serverPort(config[SNP_ES_URL]), config[SNP_ES_URL], SNP_ES_INDEXES, 'snp') )
         elif form['test'].value == 'nibFiles':
-                print ( nibFilesCell('Sequence Retrieval : NIB Files') )
+                print ( nibFilesCell('Sequence Retrieval : NIB Files (shared by pub1/pub2)') )
         else:
                 print ( 'unkown value for "test"'  )
 else:
