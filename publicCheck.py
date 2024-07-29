@@ -22,7 +22,6 @@ FE_SOLR_URL = 'feSolrUrl'
 GXD_SOLR_URL1 = 'gxdSolrUrl1'
 GXD_SOLR_URL2 = 'gxdSolrUrl2'
 GXD_SOLR_URL3 = 'gxdSolrUrl3'
-SNP_SOLR_URL = 'snpSolrUrl'
 SNP_ES_URL = 'snpEsUrl'
 NIB_URL = 'nibUrl'
 
@@ -50,7 +49,6 @@ FE_SOLR_INDEXES = [ 'marker', 'allele', 'reference', ]
 GXD_SOLR_INDEXES = [ 'gxdResult', 'gxdImagePane' ]
 
 # sample of indexes to check counts (SNPs)
-SNP_SOLR_INDEXES = [ 'SearchSNPIndex', 'ConsensusSNPIndex', 'AlleleSNPIndex' ]
 SNP_ES_INDEXES = [ 'search_snp_index', 'consensus_snp_index', 'allele_snp_index' ]
 
 # canned URL for sequence retrieval from NIB files
@@ -68,7 +66,6 @@ pub1 = {
         GXD_SOLR_URL1 : 'http://bhmgipgxd01lp.jax.org:9995/solr',
         GXD_SOLR_URL2 : 'http://bhmgipgxd03lp.jax.org:9995/solr',
         GXD_SOLR_URL3 : 'http://bhmgipgxd05lp.jax.org:9995/solr',
-        SNP_SOLR_URL : 'http://bhmgipsnp01lp.jax.org:18983/solr',
         SNP_ES_URL : 'http://bhmgisnp01lp.jax.org:9200',
 }
 
@@ -82,7 +79,6 @@ pub2 = {
         GXD_SOLR_URL1 : 'http://bhmgipgxd02lp.jax.org:9995/solr',
         GXD_SOLR_URL2 : 'http://bhmgipgxd04lp.jax.org:9995/solr',
         GXD_SOLR_URL3 : 'http://bhmgipgxd06lp.jax.org:9995/solr',
-        SNP_SOLR_URL : 'http://bhmgipsnp01lp.jax.org:28983/solr',
         SNP_ES_URL : 'http://bhmgisnp02lp.jax.org:9200',
 }
 
@@ -287,11 +283,6 @@ out = [
         '</tr>',
 
         '<tr>',
-        '<td id="cell16">SNP Solr - Working...<script>populate("snpSolr", "pub1", "cell16")</script></td>',
-        '<td id="cell17">SNP Solr - Working...<script>populate("snpSolr", "pub2", "cell17")</script></td>',
-        '</tr>',
-
-        '<tr>',
         '<td id="cell18">SNP ES - Working...<script>populate("snpEs", "pub1", "cell18")</script></td>',
         '<td id="cell19">SNP ES - Working...<script>populate("snpEs", "pub2", "cell19")</script></td>',
         '</tr>',
@@ -334,8 +325,6 @@ if "test" in form and "server" in form:
                 print ( solrCell('GXD Solr : %s' % serverPort(config[GXD_SOLR_URL2]), config[GXD_SOLR_URL2], GXD_SOLR_INDEXES, 'gxd') )
         elif form['test'].value == 'gxdSolr3':
                 print ( solrCell('GXD Solr : %s' % serverPort(config[GXD_SOLR_URL3]), config[GXD_SOLR_URL3], GXD_SOLR_INDEXES, 'gxd') )
-        elif form['test'].value == 'snpSolr':
-                print ( solrCell('SNP Solr : %s' % serverPort(config[SNP_SOLR_URL]), config[SNP_SOLR_URL], SNP_SOLR_INDEXES, 'snp') )
         elif form['test'].value == 'snpEs':
                 print ( esCell('SNP ES : %s' % serverPort(config[SNP_ES_URL]), config[SNP_ES_URL], SNP_ES_INDEXES, 'snp') )
         elif form['test'].value == 'nibFiles':
